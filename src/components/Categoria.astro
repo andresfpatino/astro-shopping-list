@@ -1,0 +1,16 @@
+---
+import { Astro } from 'astro/components';
+
+const eliminarCategoria = async (id) => {
+  const respuesta = await fetch(`http://localhost:3001/categorias/${id}`, {
+    method: 'DELETE',
+  });
+  if (respuesta.ok) {
+    // Aquí podrías actualizar la interfaz de usuario para eliminar la categoría
+  }
+}
+---
+
+<h2>{props.nombre}</h2>
+<div style={`background-color: ${props.color};`}></div>
+<button onClick={() => eliminarCategoria(props.id)}>Eliminar categoría</button>

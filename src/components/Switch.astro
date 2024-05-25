@@ -1,0 +1,12 @@
+---
+import { Astro } from 'astro/components';
+
+const cambiarModo = (event) => {
+  document.documentElement.setAttribute('data-theme', event.target.checked ? 'dark' : 'light');
+}
+---
+
+<label>
+  Modo oscuro
+  <input type="checkbox" onChange={cambiarModo} />
+</label>

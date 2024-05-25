@@ -1,8 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
 
-import { getLangFromUrl, useTranslations} from '../i18n/utils';
+import { getLangFromUrl, useTranslations} from '../../i18n/utils';
+
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -42,6 +43,7 @@ const t = useTranslations(lang);
 
 		<Nav />
 
+		
 		<h1>{t('title.home')} <span class="text-gradient">Astro</span> </h1>
 	</main>
 </Layout>

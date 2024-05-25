@@ -1,0 +1,25 @@
+{
+    "listas": [
+        {
+            "id": "1",
+            "nombre": "Lista de Marzo",
+            "items": []
+        }
+    ],
+    "categorias": [
+        {
+            "id": "1",
+            "nombre": "Frutas",
+            "color": "#FF0000"
+        }
+    ],
+    "items": [
+        {
+            "id": "1",
+            "nombre": "Manzanas",
+            "precioPorUnidad": 0.5,
+            "categoria": "1",
+            "unidad": "kilo"
+        }
+    ]
+}

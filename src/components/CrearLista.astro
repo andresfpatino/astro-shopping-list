@@ -1,0 +1,20 @@
+---
+import { Astro } from 'astro/components';
+
+const crearLista = async (event) => {
+  event.preventDefault();
+  const nombre = event.target.elements.nombre.value;
+  const respuesta = await fetch('http://localhost:3001/listas', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre, items: [] }),
+  });
+  const lista = await respuesta.json();
+  console.log(lista);
+}
+---
+
+<form onSubmit={crearLista}>
+  <input type="text" name="nombre" placeholder="Nombre de la lista" />
+  <button type="submit">Crear lista</button>
+</form>

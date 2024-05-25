@@ -1,0 +1,26 @@
+---
+import { Astro } from 'astro/components';
+
+const crearItem = async (event) => {
+  event.preventDefault();
+  const nombre = event.target.elements.nombre.value;
+  const precioPorUnidad = event.target.elements.precioPorUnidad.value;
+  const categoria = event.target.elements.categoria.value;
+  const unidad = event.target.elements.unidad.value;
+  const respuesta = await fetch('http://localhost:3001/items', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre, precioPorUnidad, categoria, unidad }),
+  });
+  const item = await respuesta.json();
+  console.log(item);
+}
+---
+
+<form onSubmit={crearItem}>
+  <input type="text" name="nombre" placeholder="Nombre del item" />
+  <input type="number" name="precioPorUnidad" placeholder="Precio por unidad" />
+  <input type="text" name="categoria" placeholder="Categoría" />
+  <input type="text" name="unidad" placeholder="Unidad" />
+  <button type="submit">Crear item</button>
+</form>
