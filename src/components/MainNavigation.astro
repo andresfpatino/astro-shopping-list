@@ -1,0 +1,42 @@
+---
+import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
+import LanguagePicker from '../components/LanguagePicker.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+
+---
+
+<div class="Header">
+  
+  <ul class="MainNavigation">
+      <li>
+        <a href={translatePath('/')}>
+          {t('nav.home')}
+        </a>
+          <a href={translatePath('/lists/')}>
+            {t('nav.lists')}
+          </a>
+      </li>
+  </ul>
+  
+  <LanguagePicker />
+
+</div>
+
+
+<style is:global>
+
+  .Header{
+    @apply flex justify-between items-center text-white;
+  }
+  .MainNavigation{
+      @apply flex items-center justify-center list-none gap-x-3;
+      li{
+          a{
+              @apply text-white no-underline;
+          }
+      }
+  }
+</style>

@@ -8,12 +8,12 @@ export const languages = {
   export const ui = {
     en: {
       'nav.home': 'Home',
-      'nav.about': 'About',
+      'nav.lists': 'Lists',
       'title.home': ' Welcome to',
     },
     es: {
       'nav.home': 'Inicio',
-      'nav.about': 'Acerca de',
+      'nav.lists': 'Listas',
       'title.home': 'Bienvenido a',
     },
   } as const;
