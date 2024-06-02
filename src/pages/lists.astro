@@ -1,30 +1,36 @@
 ---
 import Layout from '../layouts/MainLayout.astro';
-import CrearLista from "../components/CrearLista.astro";
-
 
 import { getLangFromUrl, useTranslations} from '../i18n/utils';
 import MainNavigation from '../components/MainNavigation.astro';
+//import { getLoginSession } from 'lucia-auth';
+import { db, Lists, User, eq } from 'astro:db';
 
 // Get the language from the URL for translations
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-// Import the database and tables
-import { db, Lists } from 'astro:db';
+// Get the user from the session
+const user = Astro.locals.user;
 
-// Query Data
-const lists = await db.select().from(Lists);
+// Get the lists from the database
+const lists = await db.select().from(Lists).where(eq(Lists.userId, user.id));
+
 
 // Insert Data into the Lists table
 if (Astro.request.method === 'POST') {
-  const formData = await Astro.request.formData();
-  const name = formData.get('name');
-  const description = formData.get('description');
-  if (typeof name === 'string' && typeof description === 'string') {
-    // insert form data into the Lists table
-    await db.insert(Lists).values({ name, description });
-  }
+	const formData = await Astro.request.formData();
+	const name = formData.get('name');
+	const description = formData.get('description');
+
+	if (typeof name === 'string' && typeof description === 'string') {
+		// insert form data into the Lists table
+		try {
+			await db.insert(Lists).values({ name, description, userId: user.id });
+		} catch (error) {
+			console.log('Error inserting into database:', error);
+		}
+	}
 }
 ---
 
@@ -62,38 +68,43 @@ if (Astro.request.method === 'POST') {
 
 		<script type="module">
 			// Client-side JavaScript to handle adding new list items
-			const form = document.querySelector('#formLists');
-			const listContainer = document.querySelector('#list-container');
-		  
 			form.addEventListener('submit', async (event) => {
-			  event.preventDefault();
-		  
-			  const formData = new FormData(form);
-			  const name = formData.get('name');
-			  const description = formData.get('description');
-		  
-			  // Add the new list item to the DOM
-			  const newItem = document.createElement('article');
-			  newItem.innerHTML = `
-				<p>Name: ${name}</p>
-				<p>Descripcion: ${description}</p>
-			  `;
-			  listContainer.appendChild(newItem);
-		  
-			  // Send a request to the server to add the new list item to the database
-			  const response = await fetch('/', {
-				method: 'POST',
-				body: formData,
-			  });
-		  
-			  if (response.ok) {
-				// If the server request was successful, reset the form
-				form.reset();
-			  } else {
-				// If the server request failed, remove the new list item from the DOM and show an error message
-				listContainer.removeChild(newItem);
-				alert('Error adding new list item');
-			  }
+				event.preventDefault();
+
+				const formData = new FormData(form);
+				const name = formData.get('name');
+				const description = formData.get('description');
+
+				// Send a request to the server to add the new list item to the database
+				const response = await fetch('/', {
+					method: 'POST',
+					body: formData,
+				});
+
+				if (response.ok) {
+					// If the server request was successful, reset the form
+					form.reset();
+
+					// Fetch the latest data from the server and update the DOM
+					const latestData = await fetch('/lists');
+					const latestDataJson = await latestData.json();
+
+					// Clear the list container
+					listContainer.innerHTML = '';
+
+					// Add the latest data to the DOM
+					latestDataJson.forEach(item => {
+					const newItem = document.createElement('article');
+					newItem.innerHTML = `
+						<p>Name: ${item.name}</p>
+						<p>Description: ${item.description}</p>
+					`;
+					listContainer.appendChild(newItem);
+					});
+				} else {
+					// If the server request failed, show an error message
+					alert('Error adding new list item');
+				}
 			});
 		</script>
 

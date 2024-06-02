@@ -5,6 +5,7 @@ export const Lists = defineTable({
 		id: column.number({ primaryKey: true }),
 		name: column.text(),
 		description: column.text({ optional: true }),
+		userId : column.text({ references: () => User.columns.id }),
 	},
 });
 

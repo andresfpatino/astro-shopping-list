@@ -1,6 +1,7 @@
 ---
 import { getLangFromUrl, useTranslations, useTranslatedPath } from '../i18n/utils';
 import LanguagePicker from '../components/LanguagePicker.astro';
+const user = Astro.locals.user;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -19,6 +20,15 @@ const translatePath = useTranslatedPath(lang);
 				{t('nav.lists')}
 			</a>
 		</li>
+		<li>
+			Hola,  {user.username}
+		</li>
+		<li>
+			<li>
+				<form method="POST" action="/api/signout">
+					<button class="btn">Sign out</button>
+				  </form>
+			</li>
 	</ul>
 
 	<LanguagePicker />
