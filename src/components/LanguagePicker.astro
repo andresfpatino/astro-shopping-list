@@ -6,22 +6,13 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 ---
+
 <ul class="LangugePicker">
-  {Object.entries(languages).map(([lang, label]) => (
-    <li>
-      <a href={translatePath('/', lang)}>{label}</a>
-    </li>
-  ))}
+    {
+        Object.entries(languages).map(([lang, label]) => (
+            <li>
+                <a href={translatePath('/', lang)}>{label}</a>
+            </li>
+        ))
+    }
 </ul>
-
-<style is:global>
-
-  .LangugePicker{
-        @apply flex items-center justify-center list-none gap-x-3;
-        li{
-            a{
-                @apply text-white no-underline;
-            }
-        }
-  }
-</style>

@@ -8,14 +8,6 @@ export default async function seed() {
 				name: 'Enero',
 				description: `<p>Lista de compras de Enero</p>`,
 			},
-            {
-				name: 'Febrero',
-				description: `<p>Lista de compras de Febrero</p>`,
-			},
-            {
-				name: 'Febrero',
-				description: '',
-			},
 		])
 		.returning();
 

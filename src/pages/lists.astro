@@ -1,15 +1,31 @@
 ---
+import Layout from '../layouts/MainLayout.astro';
 import CrearLista from "../components/CrearLista.astro";
 
 
-import Layout from '../layouts/Layout.astro';
 import { getLangFromUrl, useTranslations} from '../i18n/utils';
 import MainNavigation from '../components/MainNavigation.astro';
 
+// Get the language from the URL for translations
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
+// Import the database and tables
+import { db, Lists } from 'astro:db';
 
+// Query Data
+const lists = await db.select().from(Lists);
+
+// Insert Data into the Lists table
+if (Astro.request.method === 'POST') {
+  const formData = await Astro.request.formData();
+  const name = formData.get('name');
+  const description = formData.get('description');
+  if (typeof name === 'string' && typeof description === 'string') {
+    // insert form data into the Lists table
+    await db.insert(Lists).values({ name, description });
+  }
+}
 ---
 
 
@@ -19,8 +35,102 @@ const t = useTranslations(lang);
 		
 		<h1>{t('title.home')} <span class="text-gradient">Astro</span> </h1>
 
-        <CrearLista />
+		<h2>Listas:</h2>
+		
+		<div id="list-container">
+			{lists.map(({ name, description }) => (
+			  <article>
+				<p>Name: {name}</p>
+				<p>Descripcion: {description}</p>
+			  </article>
+			))}
+		</div>
+
+		<h2>Creacion de listas:</h2>
+
+		<form method="POST" id="formLists" enctype="multipart/form-data" style="display: grid">
+			<label for="name">Name</label>
+			<input id="name" name="name" />
+		  
+			<label for="description">Description</label>
+			<textarea id="description" name="description"></textarea>
+		  
+			<button type="submit">Crear lista</button>
+		</form>
+
+
+
+		<script type="module">
+			// Client-side JavaScript to handle adding new list items
+			const form = document.querySelector('#formLists');
+			const listContainer = document.querySelector('#list-container');
+		  
+			form.addEventListener('submit', async (event) => {
+			  event.preventDefault();
+		  
+			  const formData = new FormData(form);
+			  const name = formData.get('name');
+			  const description = formData.get('description');
+		  
+			  // Add the new list item to the DOM
+			  const newItem = document.createElement('article');
+			  newItem.innerHTML = `
+				<p>Name: ${name}</p>
+				<p>Descripcion: ${description}</p>
+			  `;
+			  listContainer.appendChild(newItem);
+		  
+			  // Send a request to the server to add the new list item to the database
+			  const response = await fetch('/', {
+				method: 'POST',
+				body: formData,
+			  });
+		  
+			  if (response.ok) {
+				// If the server request was successful, reset the form
+				form.reset();
+			  } else {
+				// If the server request failed, remove the new list item from the DOM and show an error message
+				listContainer.removeChild(newItem);
+				alert('Error adding new list item');
+			  }
+			});
+		</script>
+
+
 	</main>
 </Layout>
 
-
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		font-size: 20px;
+		line-height: 1.6;
+	}
+	.astro-a {
+		position: absolute;
+		top: -32px;
+		left: 50%;
+		transform: translatex(-50%);
+		width: 220px;
+		height: auto;
+		z-index: -1;
+	}
+	h1 {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+	}
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+</style>

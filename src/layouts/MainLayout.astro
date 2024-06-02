@@ -1,0 +1,28 @@
+---
+interface Props {
+	title: string;
+}
+
+import { getLangFromUrl } from '@/i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+		<meta name="generator" content={Astro.generator} />
+		{ title ? <title>Shoiping List with Astro - {title}</title> : <title>Shoiping List with Astro</title> }
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>

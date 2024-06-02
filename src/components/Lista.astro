@@ -1,18 +1,3 @@
 ---
-import { Astro } from 'astro/components';
 
-const eliminarLista = async (id) => {
-  const respuesta = await fetch(`http://localhost:3001/listas/${id}`, {
-    method: 'DELETE',
-  });
-  if (respuesta.ok) {
-    // Aquí podrías actualizar la interfaz de usuario para eliminar la lista
-  }
-}
 ---
-
-<h2>{props.nombre}</h2>
-<ul>
-  {/* Aquí irían los items de la lista */}
-</ul>
-<button onClick={() => eliminarLista(props.id)}>Eliminar lista</button>

@@ -33,6 +33,22 @@ export const Items = defineTable({
 	},
 });
 
+export const User = defineTable({
+	columns: {
+		id: column.text({ primaryKey: true, optional: false, unique: true }),
+		username: column.text({ unique: true, optional: false }),
+		password: column.text( { optional: true } ),
+	},
+});
+
+export const Session = defineTable({
+	columns: {
+		id: column.text({ optional: false, unique: true }),
+		userId: column.text({ optional: false, references: () => User.columns.id}),
+		expiresAt: column.text({ optional: false }),
+	},
+});
+
 // https://astro.build/db/config
 export default defineDb({
 	tables: {
@@ -40,5 +56,7 @@ export default defineDb({
 		Categories,
 		Units,
 		Items,
+		User,
+		Session,
 	},
 });
